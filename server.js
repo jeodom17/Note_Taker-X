@@ -17,11 +17,7 @@ app.use(express.static('public'));
 
 
 //=============================================================================
-//* HTML Routes
-//* GET Route for homepage
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
+
 
 //* GET Route for  notes section
 app.get('/notes', (req, res) =>
@@ -34,7 +30,7 @@ app.get('/notes', (req, res) =>
 
 app.get('/api/notes', (req, res) => {
   //* 
-  fs.readFile('.db/db.json', 'utf8', (err, data) => {
+  fs.readFile('./db/db.json', 'utf8', (err, data) => {
     if (err) {
       console.log(err);
       return
@@ -44,7 +40,7 @@ app.get('/api/notes', (req, res) => {
   })
 
   //* Log our request to the terminal
-  console.info(`${req.method} request received to get notes`);
+  // console.info(`${req.method} request received to get notes`);
 });
 
 
@@ -55,7 +51,7 @@ app.post('/api/notes', (req, res) => {
   //* 
   req.body.id = uuidv4();
 
-  let savedNotes = fs.readFileSync('/db/db.json', 'utf8');
+  let savedNotes = fs.readFileSync('./db/db.json', 'utf8');
   let jsonNotes = JSON.parse(savedNotes);
   jsonNotes.push(req.body);
   let newData = JSON.stringify(jsonNotes, null, 2);
@@ -75,7 +71,7 @@ app.post('/api/notes', (req, res) => {
 
 app.put('/api/notes/:id', (req, res) => {
   let editID = req.params.id;
-  let savedNotes = fs.readFileSync('/db/db.json', 'utf8');
+  let savedNotes = fs.readFileSync('./db/db.json', 'utf8');
   let jsonNotes = JSON.parse(savedNotes);
   let updateNotes = jsonNotes.reduce((arr, note) => {
     if (note.id == editID) {
@@ -100,9 +96,9 @@ app.put('/api/notes/:id', (req, res) => {
 
 //* delete note with app.delete ---- 
 
-app.delete('api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
   let deleteID = req.params.id;
-  let savedNotes = fs.readFileSync('/db/db.json', 'utf8');
+  let savedNotes = fs.readFileSync('./db/db.json', 'utf8');
   let jsonNotes = JSON.parse(savedNotes);
   let updateNotes = jsonNotes.reduce((arr, note) => {
     if (note.id !== deleteID) {
@@ -122,7 +118,13 @@ fs.writeFile('./db/db.json', newData, (err) => {
   }
 });
 
-})
+});
+
+//* HTML Routes
+//* GET Route for homepage
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/index.html'))
+);
 
 //* listen to port 3017
 app.listen(PORT, () => {
