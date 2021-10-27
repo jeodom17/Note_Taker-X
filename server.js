@@ -66,34 +66,6 @@ app.post('/api/notes', (req, res) => {
     });
   });
 
-
-//* edit notes with app.put ---- 
-
-app.put('/api/notes/:id', (req, res) => {
-  let editID = req.params.id;
-  let savedNotes = fs.readFileSync('./db/db.json', 'utf8');
-  let jsonNotes = JSON.parse(savedNotes);
-  let updateNotes = jsonNotes.reduce((arr, note) => {
-    if (note.id == editID) {
-      arr.push(req.body);
-    } else {
-      arr.push(note);
-    }
-    return arr;
-  }, []);
-
-  let newData = JSON.stringify(updateNotes, null, 2);
-
-  fs.writeFile('./db/db.json', newData, (err) => {
-    if (err) {
-      res.send('EDIT NOTE FAILED:', err)
-
-    } else {
-      res.send(`SUCCESSFULLY EDITED NOTE: ID = ${req.params.id}`)
-    }
-  });
-});
-
 //* delete note with app.delete ---- 
 
 app.delete('/api/notes/:id', (req, res) => {
